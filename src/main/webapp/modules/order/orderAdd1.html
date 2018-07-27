@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <title>点餐</title> 
+  <meta charset="UTF-8" /> 
+  <!--可以让部分国产浏览器默认采用极速模式渲染页面 目前只有360浏览器支持此 <meta> 标签--> 
+  <meta name="renderer" content="webkit" /> 
+  <!--让 IE 浏览器运行最新的渲染模式下--> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+  <!--设置viewport的宽度、初始化、缩放比例--> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" /> 
+  <!-- Fonts --> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/boostrap-font.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/boostrap-font-one.css" /> 
+  <!-- CSS Libs --> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/font-awesome.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/animate.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap-switch.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/checkbox3.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/jquery.dataTables.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/dataTables.bootstrap.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/select2.min.css" /> 
+  <!-- CSS App --> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/lib/css/style.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/lib/css/themes/flat-blue.css" /> 
+  <link type="text/css" rel="stylesheet" href="./css/orderAdd.css" /> 
+ </head> 
+ <body class="back-color">
+  <!--class="flat-blue"  --> 
+  <!-- Main Content --> 
+  <div class="container-fluid back-color" id="context"> 
+   <div class="row"> 
+    <!-- 表单start --> 
+    <div class="col-xs-12 back-color"> 
+     <div class="card back-color"> 
+      <div class="card-header"> 
+       <form id="orderaddForm"> 
+        <!-- 记录选择框的id --> 
+        <input type="hidden" id="foodIds" name="foodIds" value="" /> 
+        <table class="table back-color"> 
+         <tbody>
+          <tr> 
+           <td> <label class="col-xs-2 white-color" > <h3>座位号:</h3> </label> 
+            <div class="col-xs-3" style="padding-top: 15px;"> 
+             <!-- <input type="text" class="form-control" id="tableNumber" name="tableNumber" placeholder="餐桌牌号"> --> 
+             <select class="form-control" name="tableNumber" id="tableNumber"> 
+             	 <option value="1">1号</option>
+             	 <option value="2">2号</option> 
+             	 <option value="3">3号</option> 
+             	 <option value="4">4号</option> 
+             	 <option value="5">5号</option> 
+             	 <option value="6">6号</option> 
+             	 <option value="7">7号</option> 
+             	 <option value="8">8号</option> 
+             	 <option value="9">9号</option> 
+             	 <option value="10">10号</option> 
+             	 <option value="11">11号</option> 
+             	 <option value="12">12号</option> 
+             	 <option value="13">13号</option> 
+             	 <option value="14">14号</option> 
+             	 <option value="15">15号</option> 
+             </select> 
+            </div> <label class="col-xs-2 white-color"> <h3>总消费（￥）:</h3> </label> 
+            <div class="col-xs-3" style="padding-top: 15px;"> 
+             <input type="text" class="form-control" id="totalPrice" name="totalPrice" placeholder="订餐总额" readonly="readonly" value="0"/>
+            </div> </td> 
+          </tr> 
+         </tbody>
+        </table> 
+       </form> 
+      </div> 
+     </div> 
+    </div> 
+    <!-- 表单end--> 
+    <!-- 菜品类型开始 --> 
+    <div class="col-xs-12 back-color"> 
+     <div class="card back-color"> 
+      <div class="card-header"> 
+       <table class="table back-color"> 
+        <tbody>
+         <tr> 
+          <td> <label class="col-xs-2 white-color"> <h3>菜类型:</h3> </label> 
+           <div class="col-xs-2" style="padding-top: 15px;"> 
+            <select class="form-control" id="foodType" onchange="loadFoods();"></select> 
+           </div> 
+           <label class="col-xs-2 white-color"> <h3>菜品名称:</h3> </label> 
+           <div class="col-xs-2" style="padding-top: 15px;"> 
+            <input type="text" class="form-control" id="foodName" name="foodName" placeholder="菜品名称" onmouseout="loadFoods();" /> 
+           </div> 
+           <div class="col-xs-4" style="padding-top: 15px;"> 
+   			 <input type="button" class="btn btn-info btn-sm" id="speechId" onclick="speech();" value="语音查询" />
+            <input type="reset" class="btn btn-success btn-sm" value="清空" onclick="clearSearch();" /> 
+            <input type="button" class="btn btn-warning btn-sm" onclick="quanSelectAll()" value="全部查询" /> 
+            <input type="button" class="btn btn-sm-20 btn-success btn-sm " value="提交" onclick="submitOrder();"/> 
+           </div></td> 
+         </tr> 
+        </tbody>
+       </table> 
+      </div> 
+      <div class="card-body back-color" style="padding:0px;"> 
+       <div class="table white-color"> 
+        <div class="row clearfix" id="contextId"> 
+         	<!-- <div class="col-md-12 column"> 
+          	<div class="table-body table_th_boder" id="orderInfoListId" style="width:100%; height:auto; OVERFLOW-Y: auto; OVERFLOW-X:hidden;"> 
+          	</div> -->
+          <!-- body end --> 
+         </div> 
+        </div> 
+       </div> 
+       <!-- boostrap 表格结束 --> 
+      </div> 
+     </div> 
+    </div> 
+    <!-- 检索框end --> 
+   </div> 
+   <!-- </div> --> 
+   <audio src="" id="audioid" autoplay="autoplay" >
+
+	</audio>
+  </div> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/jquery.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/getrequest.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/page-1.0.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/cookie.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/bootstrap-growl.min.js"></script> 
+  <script type="text/javascript" src="../../common/js/utils.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/Chart.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/bootstrap-switch.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/jquery.matchHeight-min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/jquery.dataTables.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/dataTables.bootstrap.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/select2.full.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/lib/js/app.js"></script> 
+  <script>
+    var j_foods= new Object();
+    var select_type="1";
+    $(function(){
+    	loadSpeech();
+    	loadFoods();
+    	loadFoodTypes();
+    	$("#totalPrice").val("0");
+    });
+    function speech(){
+    	$("#speechId").val("请开始说话");
+    	$("#speechId").attr("disabled",true);
+    	 var params={
+   				url:basePath + '/speech/speech'
+   				};
+   		getDataByAjax(params,function(data){
+   			$("#foodName").val(data.speechResult);
+   			loadFoods();
+   			$("#speechId").val("语音查询");
+   			$("#speechId").attr("disabled",false);
+   		},null);
+    };
+    
+  		//获得所选的checkBox的值value值
+      function getCheckBoxValues() {
+        $("input[type='checkbox']:checked").each(function() {
+        	var key=$(this).val();
+      		var num=$(this).parent().parent().find("input[type=text]").val();
+      		var food=new Object();
+		  	var price=$(this).parent().parent().find(".price").attr("privce_value");
+		  	console.log(food);
+		  	console.log(j_foods);
+		  	console.log("key_"+key);
+		  	food=j_foods["key_"+key];
+		  	console.log(food);
+		  	if(food){
+		  		console.log("0000000000000000");
+		  		food=new Object();
+		  		food.num=num;
+			  	food.price=price;
+			  	console.log(key);
+		  		j_foods["key_"+key]=food;
+		  	}else{
+		  		
+		  		console.log(food.num);
+		  		food.num=Number(food.num)+num;
+		  		j_foods["key_"+key]=food;
+		  	}
+		  	
+        });
+       // return JSON.stringify(foods);
+      };
+      function setCheckBoxFalse(){
+    	  $("input[type='checkbox']:checked").each(function() {
+          	var key=$(this).prop("checked",false);
+          });
+      };
+  //选择一个checkBox时，记录所选择的值 ，去除时并将该元素删除
+  	function getCheckBoxValue(obj){
+  		var key=$(obj).val();
+  		var num=$(obj).parent().parent().find("input[type=text]").val();
+  		if(num==0||num=="0"){
+  			$(obj).prop("checked",false);
+  			showToast("请添加该菜品的数量");
+  		}else{
+  			if($(obj).prop("checked")){
+  		  		var food=new Object();
+  		  		var price=$(obj).parent().parent().find(".price").attr("privce_value");
+  		  		food.num=num;
+  		  		food.price=price;
+  		  		console.log(key);
+  		  		j_foods["key_"+key]=food;
+  		  	}else{
+  		  		console.log(j_foods);
+  		  		delete j_foods["key_"+key];
+  		  		$(obj).parent().parent().find("input[type=text]").val(0);
+  		  		console.log(j_foods);
+  		  	} 
+  		  	getTotalPrice();
+  		}
+  	}
+  //计算总价
+  function  getTotalPrice(){
+	  var totalPrice=0;//Number($("#totalPrice").val());
+	  if(JSON.stringify(j_foods) == "{}"){
+		  $("#totalPrice").val(0);
+	  }else{
+		  for(var key in j_foods) {
+			    //遍历对象，k即为key，obj[k]为当前k对应的值
+			    var num=j_foods[key].num;
+				  var price=j_foods[key].price;
+				  var result=Number(num)*Number(price);
+				  totalPrice=totalPrice+result;
+			 
+			}
+		  $("#totalPrice").val(totalPrice); 
+	  }
+  };
+	//判断checkbox 是否该选中
+	function isCheckBox(num,obj){
+		var key=$(obj).parent().parent().parent().find(".checkboxItem").val();
+		if(num<=0){
+			$(obj).parent().parent().parent().find(".checkboxItem").prop("checked",false);
+			//j_foods["key_"+key]=new Object();
+			delete j_foods["key_"+key];
+			console.log(j_foods);
+		}else{
+			$(obj).parent().parent().parent().find(".checkboxItem").prop("checked",true);
+      		var food=new Object();
+		  	var price=$(obj).parent().parent().parent().find(".price").attr("privce_value");
+		  	food=new Object();
+		  	food.num=num;
+			food.price=price;
+			console.log(key);
+			j_foods["key_"+key]=food;
+		}
+	
+	};	
+      //减法
+      function mins(obj) {
+       var num = Number($(obj).next().val());
+        if (num <= 0) {
+          $(obj).next().val(0);
+        } else {
+          $(obj).next().val(num - 1);
+         //计算总价
+    	 var totalPrice=$("#totalPrice").val();
+    	 var price=$(obj).parent().parent().parent().find(".price").attr("privce_value");
+    	 var value=Number(totalPrice)-Number(price);
+    	 $("#totalPrice").val(value);
+        }
+        //判断checkbox
+        isCheckBox(Number($(obj).next().val()),obj);
+      	
+      };
+      //加法
+      function plus(obj) {
+    	  var num = Number($(obj).prev().val());
+          if (num == "" || num == null||num == 0) {
+        	  num=0;
+            $(obj).prev().val(num + 1);
+          } else {
+          	  $(obj).prev().val(num + 1);
+          }
+       	 //计算总价
+    	 var totalPrice=$("#totalPrice").val();
+    	 var price=$(obj).parent().parent().parent().find(".price").attr("privce_value");
+    	 var value=Number(totalPrice)+Number(price);
+    	 $("#totalPrice").val(value);
+    	//判断checkbox
+         isCheckBox(Number($(obj).prev().val()),obj);
+      };
+      //鼠标进入判断输入框是不是0
+      function MouseOver(obj){
+    	 if($(obj).val()=="0"){
+    		 $(obj).val("");
+    	 }
+    	 
+      };
+      
+      //手动输入数字
+      function numListner(obj){
+    	  var num = Number($(obj).val());
+    	  var reg = /^[1-9]*[1-9][0-9]*$/;
+    	  if (reg.test(num)) {
+    		  if(num<=0){
+        		  $(obj).val(0);
+        		  num=0;
+        	  }
+        	  //
+        	var key=$(obj).parent().parent().parent().find(".checkboxItem").val();
+        	  var food=new Object();
+        	//计算总价
+    	     var totalPrice=$("#totalPrice").val();
+        	  if(j_foods["key_"+key]==undefined){
+        	     	 var price=$(obj).parent().parent().parent().find(".price").attr("privce_value");
+        	     	 var value=Number(totalPrice)+Number(price)*num;
+        	     	 $("#totalPrice").val(value);
+        	  }else{
+        		  var old_num=j_foods["key_"+key].num;
+        		  var price=j_foods["key_"+key].price;
+        		  totalPrice=totalPrice-old_num*price;
+        		  var totalPrice=$("#totalPrice").val(totalPrice+num*price);
+        	  }
+        	  isCheckBox(num,obj); 
+    	  }else{
+    		  $(obj).val(0);
+    	  }
+    	 
+    	  
+      }
+      //清空检索框
+      function clearSearch(){
+    	  $("#foodName").val("");
+    	 $("#foodType option:selected").prop("selected",false);
+    	  $("#select2-foodType-container").attr("title",$("#foodType option:selected").text()).text($("#foodType option:selected").text());
+      }
+      //全部查询
+      function quanSelectAll(){
+    	  $("#foodName").val("");
+    	  $("#foodType option:selected").prop("selected",false);
+    	  $("#select2-foodType-container").attr("title",$("#foodType option:selected").text()).text($("#foodType option:selected").text());
+    	  loadFoods();
+      }
+      //加载菜品
+      function loadFoods(){
+    	//  getCheckBoxValues();
+    	  var foodTypeId=$("#foodType").val();
+    	  if(foodTypeId==""||foodTypeId==null||foodTypeId=="-1"){
+    		  foodTypeId="";
+    	  }else{
+    		  select_type="2";
+    	  }
+    	  var params={
+  				url:basePath + '/food/list',
+  				data:{
+  					foodTypeId:foodTypeId,
+  					foodName:$("#foodName").val()
+  				}
+  				};
+  		getDataByAjax(params,function(list){
+  			var str ='';
+  			$("#orderInfoListId").empty();
+  			if (list != null && list.length > 0) {
+  				var columnNum=2;//Math.ceil(Number(list.length)/10);
+  				var pageSize=10;
+  				for(var j=1;j<=columnNum;j++){
+  					var i=(j-1)*pageSize;
+  					var size=pageSize*j;
+  					
+  					var $table=$('<div class="col-md-6 column">');
+  					for (i; i < size; i++) {
+  	  					//var imagePath=basePath + '/attachment/readImageByFoodId?foodId='+list[i].id;
+  	  					var $tr=$('<div class="row clearfix">').attr('id', list[i].id);
+  	  					var $td = $("<div>").addClass("table-body");//.addClass("img-thumbnail").addClass("img-responsive");line-height:50px;max-height: 60px;  
+  	  					var key="key_"+list[i].id;
+  	  					if(j_foods[key]==undefined){
+  	  						$tr.append($td.clone().addClass("col-md-1").addClass("column").addClass("white-color").addClass("td_text_position").html('<input type="checkbox" class="checkboxItem" style="zoom:180% !important;"  value="'+list[i].id+'"/>'));//onclick="getCheckBoxValue(this);"
+  	  					}else{
+  	  						$tr.append($td.clone().addClass("col-md-1").addClass("column").addClass("white-color").addClass("td_text_position").html('<input type="checkbox" class="checkboxItem"   style="zoom:180% !important;" value="'+list[i].id+'" checked="checked"/>'));//onclick="getCheckBoxValue(this);"
+  	  					}
+  	  					
+  	  					//$tr.append($td.clone().addClass("col-md-3").addClass("column").addClass("white-color").removeClass("img-responsive").html('<img src="'+imagePath+'" alt="" height="35px" width="35px" >'));// class=" img-responsi时间style="width:10%;height:10%;"
+  	  					
+  	  					
+  	  					$tr.append($td.clone().addClass("col-md-2").addClass("column").addClass("white-color").text([ list[i].type ]));//种类
+  	  					$tr.append($td.clone().addClass("col-md-3").addClass("column").addClass("white-color").text([ list[i].name ]));//菜名
+  	  					$tr.append($td.clone().addClass("col-md-1").addClass("column").addClass("white-color").addClass("price").attr("privce_value",list[i].price).text([ list[i].price ]));//菜的单价
+  	  					var cz="";
+  	  					if(j_foods[key]==undefined){
+  	  						cz+='<div class="input-group">';
+  	  						cz+='<span class="input-group-addon" onclick="mins(this);" style="cursor:default;">-</span>';
+  	  						cz+='<input type="text" class="form-control" value="0" id="'+list[i].id+'" onmouseover="MouseOver(this);" onmouseout="numListner(this);" style="font-size: 18px; color:#000;">';
+  	  						cz+='<span class="input-group-addon" onclick="plus(this);" style="cursor:default;">+</span> </div>';
+  			  			}else{
+  			  				cz+='<div class="input-group">';
+  	  						cz+='<span class="input-group-addon" onclick="mins(this);" style="cursor:default;">-</span>';
+  	  						cz+='<input type="text" class="form-control" value="'+j_foods[key].num+'" onmouseover="MouseOver(this);" onmouseout="numListner(this);" id="'+list[i].id+'" style="font-size: 18px; color:#000;">';
+  	  						cz+='<span class="input-group-addon" onclick="plus(this);" style="cursor:default;">+</span> </div>';
+  			  			}
+  	  					$tr.append($td.clone().addClass("col-md-2").addClass("column").html(cz));
+  	  					$("#orderInfoListId").append($tr); 
+  	  				}
+  				}
+  				
+  				
+  			} else {
+  				/* $("#orderInfoListId")
+  						.append(
+  								'<tr><td colspan="5" style="text-align:center;padding:15px 0px;"><span class="glyphicon glyphicon-info-sign" style="color:#0682E3">暂无数据</span></td></tr>'); */
+  			
+  				$("#orderInfoListId")
+					.append(
+							'<div class="col-md-12 column" style="text-align:center;padding:15px 0px;"><span class="glyphicon glyphicon-info-sign" style="color:#0682E3">暂无数据</span></div>');
+  			
+  			}
+  			
+  			
+  		},null);
+      };
+      //提交订单
+      function submitOrder(){
+    	  //getCheckBoxValues() ;
+    	  if(JSON.stringify(j_foods) != "{}"){
+    		  window.localStorage.speech="总金额是"+$("#totalPrice").val()+"元";
+        	  var params={
+        			  	async :true,
+        				url:basePath + '/order/save',
+        				data:$("#orderaddForm").serialize()+"&data="+JSON.stringify(j_foods),
+        				};
+        		getDataByAjax(params,function(data){
+        			if(data!=null&&data.status=="1"){
+        				showToast("提交成功");
+        				/*  $("input[type=text]").val("");
+        				 $("input[type=checkbox]").each(function() {
+        			          $(this).prop("checked",false);
+        			      }); */
+        			      setCheckBoxFalse();
+        			      window.location.reload(true);
+        			}else{
+        				showToast("提交失败");
+        			}
+        		},null);
+    	  }else{
+    		  showToast("请先选择要点的菜");
+    	  }
+    	 
+      }
+      //语音合成总金额
+      function loadSpeech(){
+    	  var speech=window.localStorage.speech;
+    	  if(speech!=undefined&&speech!=null&&speech!=""){
+    		  var params={
+      			  	async :true,
+      				url:basePath + '/speech/speechSynthesize',
+      				data:{
+      					text:speech
+      				}
+      				};
+      		getDataByAjax(params,function(data){
+      			var path=basePath + '/speech/say?path='+data.url
+      			$("#audioid").attr("src",path);
+      		},null);
+    	  }
+      };
+      
+      //加载菜品类型
+      function loadFoodTypes(){
+    	  var params={
+  				url:basePath + '/foodType/list'
+  				};
+  		getDataByAjax(params,function(data){
+  				var option="";
+  				if(data!=null&&data.length>0){
+  					option+='<option value="-1" id="-1" selected = "selected" >请选择</option>'
+  					for(var i in data){
+  							option += "<option value='"+[data[i].id]+"' id='"+[data[i].id]+"'>"
+  									+ [ data[i].name ] + "</option>";
+  					}
+  				}else{
+  					option+='<option value="-1" id="-1" selected = "selected" >请选择</option>'
+  				}
+  				$("#foodType").empty().html(option);
+  				 $("#select2-foodType-container").attr("title",$("#foodType option:selected").text()).text($("#foodType option:selected").text());
+  		},null);
+      };
+      
+      function modifyCheckBox(){
+    	  input[type=checkbox]
+      }
+      </script> 
+ </body>
+</html>

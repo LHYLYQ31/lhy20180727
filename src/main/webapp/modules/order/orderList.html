@@ -1,0 +1,217 @@
+<div class="side-body back-color">
+	<div class="page-title">
+		<span class="title">订单列表</span>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="card back-color">
+				<div class="card-header">
+					<table class="table">
+						<tr>
+							<td>
+								<label class="col-xs-2">
+									<h3>座位号：</h3>
+								</label>
+								<div class="col-xs-2" style="padding-top: 15px;">
+									<input class="form-control" type="text" name="tableNumber"
+										id="tableNumber" placeholder="座位号" />
+								</div>
+								<label class="col-xs-2">
+									<h3>下单时间：</h3>
+								</label>
+								<div class="col-xs-2" style="padding-top: 15px;">
+									<input class="form-control" type="text" id="createTime" placeholder="请选择时间"
+										name="createTime" CK_TYPE="NotEmpty,MaxLen_128" CK_NAME="年假年份"
+									onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+								</div>
+								<div class="col-xs-3" style="padding-top: 15px;">
+									<input type="button" class="btn btn-info btn-sm"
+										onclick="selectAll()" value="查询" /> <input type="reset"
+										class="btn btn-success btn-sm" value="清空"
+										onclick="clearSearch()"> <input type="button"
+										class="btn btn-warning btn-sm" onclick="quanSelectAll()"
+										value="全部查询" />
+								</div></td>
+						</tr>
+					</table>
+				</div>
+				<div class="card-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th align="center" style="text-align: center">编号</th>
+								<th align="center" style="text-align: center">桌号</th>
+								<th align="center" style="text-align: center">时间</th>
+								<th align="center" style="text-align: center">总消费</th>
+								<th align="center" style="text-align: center">操作</th>
+							</tr>
+						</thead>
+						<tbody id="orderListId">
+
+						</tbody>
+					</table>
+				</div>
+				<div class="text-center lbpage " id="pageDiv"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	//加载数据
+	$(function() {
+		selectAll();
+	});
+	//全部查询数据
+	function selectAll(page) {
+		var tableNumber = $("#tableNumber").val();
+		var createTime = $("#createTime").val();
+		var params={
+				url:basePath + '/order/list',
+				data : {
+							pageNum : getPageNum(page),
+							pageSize : 10,
+							tableNumber : tableNumber,
+							createTime : createTime
+						}
+				};
+		getDataByAjax(params,function(data){
+			var indexNum = data.indexNum;
+			list = data.recordList;
+			var str = "";
+			$("#orderListId").empty();
+			if (list != null && list.length > 0) {
+				indexNum = parseInt(indexNum);
+				var $tr = $("tr[class='info']");
+				for (var i = 0; i < list.length; i++) {
+					var $tr = $('<tr>').attr('id', list[i].id);
+					var $td = $("<td>").attr({
+						"style" : "text-align:center;line-height:32px;"
+					});
+					$tr.append($td.clone().html(indexNum));
+					$tr.append($td.clone().text([ list[i].tableNumber ]));//桌号
+					$tr.append($td.clone().text([ list[i].createTime ]));//时间
+					$tr.append($td.clone().text([ list[i].totalPrice ]));//总消费
+					var btnDel = '<button class="btn btn-danger btn-xs" title="删除" onclick="deleteOrder(\''
+							+ list[i].id + '\');">删除</button>';
+					var btnUpdate = '<button class="btn btn-warning btn-xs" title="修改" onclick="editOrder(\''
+							+ list[i].id + '\');">修改</button>';
+					$tr.append($td.clone().attr('data-file', 'opr').html(
+							btnUpdate + '&emsp;' + btnDel).attr('onclick',
+							'preventDefault()'));//操作
+					$("#orderListId").append($tr);
+					indexNum++;
+				}
+			} else {
+				$("#orderListId")
+						.append(
+								'<tr><td colspan="8" style="text-align:center;padding:15px 0px;"><span class="glyphicon glyphicon-info-sign" style="color:#0682E3">暂无数据</span></td></tr>');
+			}
+			initPage(data);
+		},null);
+	};
+	//清空功能
+	function clearSearch() {
+
+		$("#tableNumber").val("");
+		$("#createTime").val("");
+	};
+	function preventDefault() {
+		//取消事件冒泡
+		var e = arguments.callee.caller.arguments[0] || event; //若省略此句，下面的e改为event，IE运行可以，但是其他浏览器就不兼容
+		if (e && e.stopPropagation) {
+			// this code is for Mozilla and Opera
+			e.stopPropagation();
+		} else if (window.event) {
+			// this code is for IE
+			window.event.cancelBubble = true;
+		}
+	};
+	//全部查询
+	function quanSelectAll() {
+		$("#tableNumber").val("");
+		$("#createTime").val("");
+		selectAll();
+	}
+
+	//去修改页面
+	function editOrder(id) {
+		$("#context").empty().load(
+				"../order/orderDetail.html", {
+					number : Math.random()
+				}, function() {
+					$('#orderId').val(id);
+					var params={
+							url:basePath + '/order/getModel',
+							data : {
+								id : id
+							}
+							};
+					getDataByAjax(params,function(data){
+						if (data != null&&data.status=="1") {
+						$("#tableNumber").val(data.order.tableNumber);
+						$("#createTime").val(data.order.createTime);
+						$("#totalPrice").val(data.order.totalPrice);
+						showOrderInfoList(data.children);
+					} else {
+						showToast("查看失败",'error');
+					}
+					},null);
+					
+					});
+	};
+	//显示详情列表
+	function showOrderInfoList(list){
+		var indexNum = 1;
+		var str = "";
+		$("#orderInfoListId").empty();
+		if (list != null && list.length > 0) {
+			for (var i = 0; i < list.length; i++) {
+				var $tr = $('<tr>').attr('id', list[i].id);
+				var $td = $("<td>").attr({
+					"style" : "text-align:center;line-height:32px;"
+				});
+				$tr.append($td.clone().text(indexNum));
+				$tr.append($td.clone().text([ list[i].name ]));//菜名
+				$tr.append($td.clone().addClass("price").text([ list[i].price ]));//单间
+				$tr.append($td.clone().addClass("num").html('<input type="text" style="color:#000;" value="'+[ list[i].num ]+'">'));//数量
+				$tr.append($td.clone().addClass("totalPrice").text(Number(list[i].price)*Number(list[i].num)));//总价
+				var btnDel = '<button class="btn btn-danger btn-xs" title="删除" onclick="deleteOrderInfo(\''
+						+ list[i].id + '\',this);">删除</button>';
+				var btnUpdate = '<button class="btn btn-warning btn-xs" title="修改" onclick="editOrderInfo(\''
+						+ list[i].id + '\',this);">修改</button>';
+				$tr.append($td.clone().attr('data-file', 'opr').html(
+						btnUpdate + '&emsp;' + btnDel).attr('onclick',
+						'preventDefault()'));//操作
+				$("#orderInfoListId").append($tr);
+				indexNum++;
+			}
+		} else {
+			$("#orderInfoListId")
+					.append(
+							'<tr><td colspan="8" style="text-align:center;padding:15px 0px;"><span class="glyphicon glyphicon-info-sign" style="color:#0682E3">暂无数据</span></td></tr>');
+		}
+	};
+	
+	//删除应用数据
+	function deleteOrder(id) {
+		if (id == null || id == "") {
+			showToast("id不能为空",'error');
+			return;
+		}
+		var params={
+				url:basePath + '/order/delete',
+				data : {
+					orderId : id
+				}
+				};
+	getDataByAjax(params,function(data){
+		if(data&&data.status=="1"){
+			showToast("删除成功",'success');
+			selectAll();
+		}else{
+			showToast("删除失败",'error');
+		}
+	},null);
+	};
+	
+</script>

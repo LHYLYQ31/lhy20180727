@@ -1,0 +1,151 @@
+<div class="side-body back-color">
+	<div class="page-title">
+		<span class="title">流水管理列表</span>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="card back-color">
+				<div class="card-header">
+					<table class="table">
+						<tr>
+							<td>
+								<label class="col-xs-1">
+										<h3>年:</h3>
+									</label>
+									<div class="col-xs-2" style="padding-top: 15px;">
+										<input class="form-control" type="text" id="yearTime" placeholder="请选择年"
+											name="yearTime" CK_TYPE="NotEmpty,MaxLen_128" CK_NAME="年假年份"
+										onclick="WdatePicker({dateFmt:'yyyy'})" />
+									</div>
+								<label class="col-xs-1">
+									<h3>月:</h3>
+								</label>
+								<div class="col-xs-2" style="padding-top: 15px;">
+									<input class="form-control" type="text" id="monthTime" placeholder="请选择月份"
+										name="monthTime" CK_TYPE="NotEmpty,MaxLen_128" CK_NAME="年假年份"
+									onclick="WdatePicker({dateFmt:'yyyy-MM'})" />
+								</div>
+								<label class="col-xs-1">
+									<h3>日:</h3>
+								</label>
+								<div class="col-xs-2" style="padding-top: 15px;">
+									<input class="form-control" type="text" id="dayTime" placeholder="请选择日期"
+										name="dayTime" CK_TYPE="NotEmpty,MaxLen_128" CK_NAME="年假年份"
+									onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+								</div>
+								<div class="col-xs-3" style="padding-top: 15px;">
+									<input type="button" class="btn btn-info btn-sm"
+										onclick="selectAll()" value="查询" /> <input type="reset"
+										class="btn btn-success btn-sm" value="清空"
+										onclick="clearSearch()"> <input type="button"
+										class="btn btn-warning btn-sm" onclick="quanSelectAll()"
+										value="全部查询" />
+								</div></td>
+						</tr>
+					</table>
+				</div>
+				<div class="card-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th align="center" style="text-align: center">编号</th>
+								<th align="center" style="text-align: center">方式</th>
+								<th align="center" style="text-align: center">时间</th>
+								<th align="center" style="text-align: center">收入(￥)</th>
+							</tr>
+						</thead>
+						<tbody id="incomeListId">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	//加载数据
+	$(function() {
+		selectAll();
+	});
+	//全部查询数据
+	function selectAll(page) {
+		if("1"!=$("#userId").val()){
+			 showToast('您没有权限操作');
+			 return ;
+		 }
+		var monthTime = $("#monthTime").val();
+		var dayTime = $("#dayTime").val();
+		var yearTime=$("#yearTime").val();
+		var params={
+				url:basePath + '/income/list',
+				data : {
+							monthTime : monthTime,
+							dayTime : dayTime,
+							yearTime : yearTime
+						}
+				};
+		getDataByAjax(params,function(list){
+			var indexNum =1;
+			if (list != null && list.length > 0) {
+				indexNum = parseInt(indexNum);
+				$("#incomeListId").empty();
+				for (var i = 0; i < list.length; i++) {
+					var $tr=$('<tr>').attr('id', list[i].id);
+					var $td = $("<td>").attr({
+						"style" : "text-align:center;line-height:32px;"
+					});
+					$tr.append($td.clone().html(indexNum));
+					if("m"==list[i].type ){
+						$tr.append($td.clone().text("月流水"));//方式
+					}else if("y"==list[i].type){
+						$tr.append($td.clone().text("年流水"));//方式
+					}else{
+						$tr.append($td.clone().text("日流水"));//方式
+					}
+					$tr.append($td.clone().text([ list[i].time ]));//时间
+					$tr.append($td.clone().text([ list[i].income ]));//总消费
+					/* var btnDel = '<button class="btn btn-danger btn-xs" title="删除" onclick="deleteOrder(\''
+							+ list[i].id + '\');">删除</button>';
+					var btnUpdate = '<button class="btn btn-warning btn-xs" title="修改" onclick="editOrder(\''
+							+ list[i].id + '\');">修改</button>';
+					$tr.append($td.clone().attr('data-file', 'opr').html(
+							btnUpdate + '&emsp;' + btnDel).attr('onclick',
+							'preventDefault()'));//操作 */
+					indexNum++;
+					$("#incomeListId").append($tr);
+				}
+				
+			} else {
+				$("#incomeListId")
+						.append(
+								'<tr><td colspan="8" style="text-align:center;padding:15px 0px;"><span class="glyphicon glyphicon-info-sign" style="color:#0682E3">暂无数据</span></td></tr>');
+			}
+		},null);
+	};
+	//清空功能
+	function clearSearch() {
+		 $("#monthTime").val("");
+		$("#dateTime").val("");
+		$("#yearTime").val("");
+	};
+	function preventDefault() {
+		//取消事件冒泡
+		var e = arguments.callee.caller.arguments[0] || event; //若省略此句，下面的e改为event，IE运行可以，但是其他浏览器就不兼容
+		if (e && e.stopPropagation) {
+			// this code is for Mozilla and Opera
+			e.stopPropagation();
+		} else if (window.event) {
+			// this code is for IE
+			window.event.cancelBubble = true;
+		}
+	};
+	//全部查询
+	function quanSelectAll() {
+		 $("#monthTime").val("");
+		$("#dateTime").val("");
+		$("#yearTime").val("");
+		selectAll();
+	}
+	
+</script>

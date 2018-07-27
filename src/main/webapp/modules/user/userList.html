@@ -1,0 +1,159 @@
+<div class="side-body back-color">
+    <div class="page-title">
+        <span class="title">用户列表</span>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card back-color">
+                <div class="card-header">
+                   	<table class="table">
+						<tr>
+							<td>
+								<label class="col-xs-5">
+									<h3>用户名</h3>
+								</label>
+								<div class="col-xs-3" style="padding-top: 15px;">
+									<input class="form-control" type="text" name="userName" id="userName" placeholder="用户名"/>
+								</div>
+								 <div class="col-xs-3" style="padding-top: 15px;">
+									<input type="button" class="btn btn-info btn-sm" onclick="selectAll()" value="查询"/>
+									<input type="reset" class="btn btn-success btn-sm" value="清空" onclick="clearSearch()">	
+									<input type="button" class="btn btn-info btn-sm" onclick="quanSelectAll()" value="全部查询"/>
+					
+								</div> 
+							</td>
+						</tr>
+					</table>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr >
+                            <th align= "center" style="text-align:center" >
+                                	编号
+                            </th>
+                            <th align= "center" style="text-align:center">
+                              		 用户名
+                            </th>
+                            <th align= "center" style="text-align:center">
+                               		 时间
+                            </th>
+                            <th align= "center" style="text-align:center">
+                               		 操作
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="userListId">
+                       
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center lbpage " id="pageDiv">
+            </div>
+        </div>
+    </div>
+</div>
+
+						
+</div>
+<script>
+//加载数据
+$(function(){
+	selectAll();
+});
+
+//全部查询数据
+ function selectAll(page){
+ 	var userName =$("#userName").val();
+ 	var params={
+			url:basePath + '/user/list',
+			data : {
+						pageSize : getPageNum(page),
+						rowNum : 10,
+						userName : userName,
+					}
+			};
+	getDataByAjax(params,function(data){
+		var indexNum = data.indexNum;
+		list = data.recordList;
+		var str="";
+		$("#userListId").empty();
+		if(list!=null && list.length > 0){
+			indexNum = parseInt(indexNum);
+			var $tr = $("tr[class='info']");
+			for (var i = 0; i < list.length; i++) {
+				var $tr = $('<tr>').attr('id',list[i].userId);
+				var $td = $("<td>").attr({
+					"style" : "text-align:center;line-height:32px;"
+					});
+				$tr.append($td.clone().html(indexNum));
+				$tr.append($td.clone().text([list[i].userName]));//会员名称
+				$tr.append($td.clone().text([list[i].createTime]));//添加时间
+				var btnDel = '<button class="btn btn-danger btn-xs" title="删除" onclick="deleteUser(\''+list[i].userId+'\')">删除</button>'; 
+				$tr.append($td.clone().attr('data-file','opr').html(btnDel).attr('onclick','preventDefault()'));//操作
+				$("#userListId").append($tr);
+				indexNum++;
+			}
+		}else{
+			$("#userListId").append('<tr><td colspan="8" style="text-align:center;padding:15px 0px;"><span class="glyphicon glyphicon-info-sign" style="color:#0682E3">暂无数据</span></td></tr>');
+		}
+		initPage(data);
+	},null);
+}  
+ //清空功能
+ function clearSearch(){
+ 	$("input[name='userName']").val("");
+ 	$("input[name='userPhone']").val("");
+ }
+function preventDefault(){
+	//取消事件冒泡
+     var e=arguments.callee.caller.arguments[0]||event; //若省略此句，下面的e改为event，IE运行可以，但是其他浏览器就不兼容
+     if (e && e.stopPropagation) {
+     // this code is for Mozilla and Opera
+     e.stopPropagation();
+     } else if (window.event) {
+     // this code is for IE
+      window.event.cancelBubble = true;
+     }
+}  
+//全部查询
+function quanSelectAll(){
+	$("input[name='userName']").val("");
+ 	$("input[name='userPhone']").val("");
+	selectAll();
+}
+
+//删除数据
+function deleteUser(id){
+	if("1"!=$("#userId").val()){
+		 showToast('您没有权限操作');
+		 return ;
+	 }
+	if(id==null||id==""){
+		showToast('请选择要删除的数据');
+		return ;
+	}
+	var params={
+			url:basePath + '/user/delete',
+			data : {
+						userId : id
+					}
+			};
+	getDataByAjax(params,function(data){
+		if(data!=null){
+			if(data.status == "1"){
+				showToast('删除成功！');
+				loadHtml("1","#menu1");
+			}else if(data.status == "0"){
+				showToast('删除失败！');
+			}else if(data.status == "2"){
+				showToast('没有删除权限');
+			}else if(data.status == "3"){
+				showToast('不能删除admin用户');
+			}
+		}else{
+			showToast('未知错误！');
+		}
+	},null);
+} 
+</script>

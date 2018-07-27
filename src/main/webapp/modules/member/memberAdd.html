@@ -1,0 +1,82 @@
+
+<div class="side-body back-color">
+    <div class="page-title">
+        <span class="title">会员添加</span>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-body back-color">
+                	 <form id="memberform">
+                        <div class="form-group">
+                            <label for="memberName">会员名称:</label>
+                            <input type="text" class="form-control" id="memberName" name="memberName" placeholder="会员名称">
+                        </div>
+                        <div class="form-group">
+                            <label for="memberPhone">手机号:</label>
+                            <input type="text" class="form-control" id="memberPhone" name="memberPhone" placeholder="手机号" onchange="isExsit(this);">
+                        </div>
+                        <div class="form-group">
+				      		<input type="button" class="btn btn-default" id="saveMember" onclick="saveMemberFunc()" value="保存" style="width:120px !important;" />
+					    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//保存应用消息
+function saveMemberFunc(){
+	if($("#memberName").val()==null||$("#memberName").val()==""){
+		showToast('会员名不能为空');
+		return;
+	}
+	if($("#memberPhone").val()==null||$("#memberPhone").val()==""){
+		showToast('手机号不能为空');
+		return;
+	}
+	var params={
+			url:basePath + '/member/save',
+			data:$("#memberform").serialize()
+		};
+	getDataByAjax(params,function(data){
+		if(data!=null){
+			if(data.id != null){
+				showToast('保存成功！');
+				loadHtml("3","#menu3");
+			}else{
+				showToast('保存失败！');
+			}
+		}else{
+			showToast('未知错误！');
+		}
+	},null);
+	
+};
+//输入框的值改变，去判断是手机号格式是否正确。在库中是否存在
+function isExsit(obj){
+	var phone=$(obj).val();
+	if(phone==null||phone==""){
+		return ;
+	}
+	if(isPoneAvailable($("#memberPhone").val())){
+		showToast('手机号格式不正确');
+		return;
+	}
+	var params={
+			url:basePath + '/member/getModel',
+			data:{
+				
+				memberPhone:phone
+			}
+				
+		};
+	getDataByAjax(params,function(data){
+		if(data!=null){
+			showToast('该手机号已经存在,请更换');
+			$(obj).val('');
+		}
+	},null);
+}
+</script>

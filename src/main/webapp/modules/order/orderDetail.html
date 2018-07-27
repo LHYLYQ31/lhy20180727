@@ -1,0 +1,113 @@
+
+<div class="side-body back-color">
+	<div class="page-title">
+		<span class="title">订单修改</span>
+	</div>
+	<!--<div class="row">
+		<div class="col-xs-12">
+			<div class="card">
+				<div class="card-body">
+					<form id="orderUpdateForm">
+						<input type="hidden" name="orderId" id="orderId"/>
+						 <input type="hidden" name="tableNumber" id="tableNumber"/>
+						<input type="hidden" name="createTime" id="createTime"/>
+						<input type="hidden" name="totalPrice" id="totalPrice"/> 
+						<div class="form-group">
+							<label for="exampleInputEmail1">餐桌号:</label> <input type="text"
+								class="form-control" id="tableNumber" name="tableNumber"
+								placeholder="餐桌号">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">订餐时间:</label>
+							<input type="text"
+								class="form-control" id="createTime" name="createTime"
+								placeholder="订餐时间">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">订餐总额:</label>
+							<input type="text"
+								class="form-control" id="totalPrice" name="totalPrice"
+								placeholder="订餐总额">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>-->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="card back-color">
+				<div class="card-header">
+				<form id="orderUpdateForm">
+					<input type="hidden" name="orderId" id="orderId"/>
+					<table class="table">
+						<tr>
+							<td>
+								<div class="col-xs-3" style="padding-top: 15px;">
+									<select class="form-control" name="tableNumber" id="tableNumber"> 
+						             	 <option value="1">1号</option>
+						             	 <option value="2">2号</option> 
+						             	 <option value="3">3号</option> 
+						             	 <option value="4">4号</option> 
+						             	 <option value="5">5号</option> 
+						             	 <option value="6">6号</option> 
+						             	 <option value="7">7号</option> 
+						             	 <option value="8">8号</option> 
+						             	 <option value="9">9号</option> 
+						             	 <option value="10">10号</option> 
+						             	 <option value="11">11号</option> 
+						             	 <option value="12">12号</option> 
+						             	 <option value="13">13号</option> 
+						             	 <option value="14">14号</option> 
+						             	 <option value="15">15号</option> 
+					            	 </select>
+									<!-- <input type="text"
+								class="form-control" id="tableNumber" name="tableNumber"
+								placeholder="座位号"> -->
+								</div>
+								<div class="col-xs-3" style="padding-top: 15px;">
+									<input type="text"
+								class="form-control" id="createTime" name="createTime"
+								placeholder="下单时间" readonly="readonly">
+								</div>
+								<div class="col-xs-3" style="padding-top: 15px;">
+									<input type="text"
+								class="form-control" id="totalPrice" name="totalPrice"
+								placeholder="总消费" readonly="readonly">
+								</div>
+								<div class="col-xs-3" style="padding-top: 15px;"> 
+           						 <input type="button" class="btn btn-sm-20 btn-success btn-sm " value="修改" onclick="submitOrder();"/> 
+          						 <input type="button" class="btn btn-sm-20 btn-success btn-sm " value="打印" onclick="printOrder();"/>
+          						 </div>
+								</td>
+						</tr>
+					</table>
+					</form>
+				</div>
+				<div class="card-body back-color">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th align="center" style="text-align: center">编号</th>
+								<th align="center" style="text-align: center">菜名</th>
+								<th align="center" style="text-align: center">单价</th>
+								<th align="center" style="text-align: center">数量</th>
+								<th align="center" style="text-align: center">总价</th>
+								<th align="center" style="text-align: center">操作</th>
+							</tr>
+						</thead>
+						<tbody id="orderInfoListId" style="width:100%; height:60%;overflow:auto;">
+
+						</tbody>
+					<!-- 	 <tfoot>
+	                        <tr colspan="6" style="text-align:center;padding:15px 0px;">
+	                          <td style="line-height: 100px;">
+	                            <button class="btn btn-sm btn-success" onclick="updateOrder();">修改</button></td>
+	                        </tr>
+                      </tfoot> -->
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8">
+    <!--可以让部分国产浏览器默认采用极速模式渲染页面 目前只有360浏览器支持此 <meta> 标签-->
+    <meta name="renderer" content="webkit" />
+    <!--让 IE 浏览器运行最新的渲染模式下-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--设置viewport的宽度、初始化、缩放比例-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <title>后台管理系统</title>
+     <!--   <link href="../../plugins/bootstrap/css/style.css" rel="stylesheet"/>
+ 	<link href="../../plugins/bootstrap/css/style-responsive.css" rel="stylesheet"/> -->
+    <link href="../../plugins/bootstrap/css/bootstrap-3.3.4.css" rel="stylesheet"/>
+    <link href="../../plugins/bootstrap/css/boostrap-font.css" rel="stylesheet" />
+    <style>
+    body{ 
+ 		background-color:#36C0DA;
+ 		  /* background-image:url(img/login3.png);   */
+ 		  background-repeat:no-repeat;
+   			 width:100%;  
+    height:100%;  
+    background-size:conver;  
+  	}
+    
+    
+    </style>
+  </head>
+  <body >
+	  	<div class="container">
+	  				<!-- 第一行 -->
+	  			<div class="row clearfix">
+	  				<div class="col-md-12 column" style="min-height: 30px;">
+	  				</div>
+	  			</div>
+	  			<!-- 第二行 -->
+	  			<div class="row clearfix" style="min-height: 30px;">
+	  				<div class="col-md-12 column">
+	  				</div>
+	  			</div>
+	  			<!-- 第三行 -->
+	  			<div class="row clearfix">
+	  				<div class="col-md-12 column">
+	  					<!-- 第三行的第一列 -->
+	  					<div class="row clearfix">
+							<div class="col-md-3 column">
+							</div>
+							<div class="col-md-6 column">
+								<h2>Login</h2>
+					        	<div class="row clearfix"> 
+			            			<div class="col-md-12 column">
+			            				<div class="form-group ">
+			            					<hr> 
+					        				<input type="text" class="form-control" placeholder="用户名" autofocus id="userCode" name="userCode">
+			                  			</div>
+			                  		</div>
+			            	    </div>
+			            	    
+			            	    <div class="row clearfix"> 
+			                  		<div class="col-md-12 column">
+			                  			<div class="form-group">
+					        				<input type="password" class="form-control" placeholder="密码" id="password" name="password">
+			                  			</div>
+			                  		</div>
+			            	    </div>
+			            	    
+			            	    
+			            	    <div class="row clearfix"> 
+			                  		<div class="col-md-12 column">
+			                  			<div class="form-group">
+			                  				<!-- <a id="commit" class="btn btn-theme btn-block login"  type="submit"><i class="fa fa-lock"></i> 登录</a> -->
+			                  				<input type="button" class="btn btn-theme btn-block login fa fa-lock" value="登录" onclick="checkLogin()">
+			                  				<hr> 
+			                  			</div>
+			                  		</div>
+			            	    </div>
+							
+							</div>
+							<div class="col-md-3 column">
+							</div>
+						</div>
+	  				
+	  				</div>
+	  			</div>
+	  	</div>
+<script type="text/javascript" src="../../plugins/bootstrap/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../../plugins/bootstrap/js/getrequest.js"></script>
+<script type="text/javascript" src="../../plugins/bootstrap/js/page-1.0.js"></script>
+<script type="text/javascript" src="../../plugins/bootstrap/js/cookie.js"></script>
+<script type="text/javascript" src="../../plugins/bootstrap/js/md5.js"></script>
+<script type="text/javascript" src="../../common/js/utils.js"></script>
+<script type="text/javascript" src="../../common/js/bootstrap-growl.min.js"></script>
+
+
+<!-- 登录接口 -->
+ <script type="text/javascript">
+//登录
+function checkLogin(){
+	var userCode=$("#userCode").val();
+	if(userCode==null){
+		showToast("用户名不能为空",'error');
+		return ;
+	}
+	var password=$("#password").val()
+	if(password==null){
+		showToast("密码不能为空",'error');
+		return ;
+	}
+	$.ajax({
+		type: 'post',
+		url: basePath + '/login/login',
+		dataType: "json",
+		data:{
+			userCode:userCode,
+			password:hex_md5(password)
+		},
+		async: false,
+		success: function(data) {
+			if(data!=null&&data.status=="1"){
+				location.href="../main/index.html";
+			}else{
+				showToast("登录失败",'error');
+			}
+		},
+		error: function(e) {
+			showToast("登录失败",'error');
+			console.log("查询全部的应用数据报错，错误如下。");
+			console.log(e);
+		}
+	});
+	 
+}
+/*监听回车事件*/
+$(document).bind('keyup', function(event) {
+    if (event.keyCode == "13") {
+        //回车执行查询
+        checkLogin();
+    };
+});
+</script>
+</body>
+</html>

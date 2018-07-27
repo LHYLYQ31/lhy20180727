@@ -1,0 +1,87 @@
+.flat-blue .card .card-header {
+   				 border-bottom: 1px solid #E4E4E4 important!;
+		}
+		.table-head{
+			text-align: center;
+			font-weight:bold;
+			font-size: 18px;
+		}
+		 .table-body{
+			text-align: center;
+			font-weight:600;
+			font-size: 16px;
+		
+		} 
+		input[type=checkbox]{
+		    height: 2em;
+		    width: 2em;
+		    border-radius: 2px;
+		    background-color: gray;  
+	}
+     /* .td_text_position{
+     		line-height: 200px; 
+		    text-align: center;
+     } */
+     .foodInfo{
+     	 text-align: left;
+     	 padding-left: 150px;
+     }
+     .footer1280 .container{
+	background:#fff;
+	color:#999;
+	font-size:13px;
+	padding:0;
+}
+.footer1280 .container div:first-of-type hr{
+	margin:0;
+}
+.footer1280 .container hr{
+	margin:15px 0;
+}
+
+.footer1280 .container img{
+	margin:18px 0px;
+}
+.footer1280 .container div{
+	margin:20px 0px;
+	 padding:0 10px; 
+}
+.footer1280 .container div:nth-child(3) p,.footer1280 .container div:nth-child(4) p{
+	text-indent:2em;
+}
+.footer1280{
+	padding:0;
+	background:#fff;
+}
+.footer3b .container {
+    width: auto;
+}
+.njfooterbq {
+    color: #000;
+    text-align: center;
+    font-size: 13px;
+    border-top: 1px solid #fff;
+    padding: 16px 0 52px 0;
+    border-bottom: 13px solid #000;
+    background-color: gray;
+}
+.image-wh{
+	width:80px;
+	height:80px;
+}
+.table_th_boder{
+	border-bottom: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: gray;
+
+}
+img {
+	border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.back-color{
+	background-color: #000;
+}
+.white-color{
+	color: #fff;
+}

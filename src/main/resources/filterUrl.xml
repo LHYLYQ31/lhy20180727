@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<msgConfig>
+	<filter>
+	
+	</filter>
+	<noFilter>
+		<url>/login/login</url>
+		<url>/login/login.html</url>
+		<url>/food/list</url>
+		<url>/order/save</url>
+		<url>/order/orderAdd.html</url>
+		<url>/attachment/readImageByFoodId</url>
+		<url>/foodType/list</url>
+		<url>/speech/speech</url>
+		<url>/speech/say</url>
+		<url>/speech/speechSynthesize</url>
+		<url>.ttf</url>
+		<url>.woff</url>
+		<url>.eot</url>
+		<url>.svg</url>
+		<url>.woff2</url>
+		<url>.map</url>
+	</noFilter>
+</msgConfig>

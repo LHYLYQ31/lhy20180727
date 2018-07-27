@@ -1,0 +1,146 @@
+<div class="side-body back-color">
+    <div class="page-title">
+        <span class="title">菜品添加</span>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card back-color">
+                <div class="card-body">
+                	 <form id="foodform">
+                        <div class="form-group">
+                            <label for="name">菜品名称:</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="菜品名称">
+                        </div>
+                        <div class="form-group">
+                            <label for="type">类型:</label>
+                            <select class="form-control" id="foodType" name="foodTypeId"></select> 
+                        </div>
+                        <div class="form-group">
+                            <label for="price">单价:</label>
+                            <input type="text" class="form-control" id="price" name="price" placeholder="单价">
+                        </div>
+                        <div class="form-group">
+                            <label for="importPicName" class="control-label">上传图片:</label>
+                            <input type="file"  id="file" name="file" onchange="uploadFile();">
+						    <input type ="hidden"   id= "attId"  value=""/> 
+						    <div id="imgShow" style=" display: none">
+						    	<div class="form-group" title="删除上传图片">
+				      				<input type="button" class="btn btn-default btn-danger"  onclick="deleteImage();" value="删除" style="width:120px !important;" />
+					    		</div>
+						    	<img id="uploadImg" class="foodAddImage" src="" width=100%; height=300px;/>
+						    </div> 
+                        </div>
+                        <div class="form-group">
+				      		<input type="button" class="btn btn-default" id="saveMember" onclick="saveFoodFunc()" value="保存" style="width:120px !important;" />
+					    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+	loadFoodTypes();
+});
+//上传图片
+function uploadFile(){
+	var attId=$("#attId").val();
+	if(attId||attId!=""){
+		showToast('该菜已经上传过图片，如果想要跟换，请先删除');
+		return ;
+	}
+	$.ajaxFileUpload({
+	 	url: basePath + '/attachment/upload', //用于文件上传的服务器端请求地址
+	 	secureuri: false, //是否需要安全协议，一般设置为false
+	 	fileElementId: 'file', //文件上传域的ID
+	 	dataType: 'json', //返回值类型 一般设置为json
+	 	success: function (data, status){
+	 		if(data!=null&&data.status=="1"){
+	 			$("#imgShow").css("display","block")//修改display属性为block
+	 			var imagePath=basePath + '/attachment/readImageByAttachmentId?id='+data.attachmentId;
+	 			$("#uploadImg").attr("src", imagePath);
+	 			$("#attId").val(data.attachmentId);
+		 		
+	 		}
+	 },
+	 error: function (data, status, e){
+		 console.log("上传报错");
+	 	console.log(e);
+	 	console.log(data);
+	 }
+	});
+	return false;
+};
+
+//保存应用消息
+function saveFoodFunc(){
+	if($("#name").val()==null||$("#name").val()==""){
+		showToast('请写菜名');
+		return;
+	}
+	if($("#foodType").val()==null||$("#foodType").val()==""||$("#foodType").val()=="-1"){
+		showToast('请选择菜品类型');
+		return;
+	}
+	if($("#price").val()==null||$("#price").val()==""){
+		showToast('请输入单价');
+		return;
+	}
+	var params={
+			url:basePath + '/food/save',
+			data:$("#foodform").serialize()+"&attId="+$("#attId").val()
+		};
+	getDataByAjax(params,function(data){
+		if(data!=null){
+			if(data.id != null){
+				showToast('保存成功！');
+				loadHtml("7","#menu7");
+			}else{
+				showToast('保存失败！');
+			}
+		}else{
+			showToast('未知错误！');
+		}
+	},null);
+	
+};
+//加载菜品类型
+function loadFoodTypes(){
+	  var params={
+			url:basePath + '/foodType/list'
+			};
+	getDataByAjax(params,function(data){
+			var option="";
+			if(data!=null&&data.length>0){
+				option+='<option value="-1" id="-1" selected = "selected" >请选择</option>'
+				for(var i in data){
+						option += "<option value='"+[data[i].id]+"' id='"+[data[i].id]+"'>"
+								+ [ data[i].name ] + "</option>";
+				}
+			}else{
+				option+='<option value="-1" id="-1" selected = "selected" >请选择</option>'
+			}
+			$("#foodType").empty().html(option);
+			 $("#select2-foodType-container").attr("title",$("#foodType option:selected").text()).text($("#foodType option:selected").text());
+	},null);
+};
+//删除上传图片
+function deleteImage(){
+	  var params={
+				url:basePath + '/attachment/delete',
+				data:{
+					id:$("#attId").val()
+				}
+				};
+		getDataByAjax(params,function(data){
+				if(data!=null&&data.status=="1"){
+					$("#imgShow").css("display","none");//修改display属性为block
+			 		$("#attId").val("");
+			 		$("#file").val("");
+				}else{
+				}
+		},null);
+};
+
+</script>

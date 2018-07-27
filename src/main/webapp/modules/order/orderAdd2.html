@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <title>点餐</title> 
+  <meta charset="UTF-8" /> 
+  <!--可以让部分国产浏览器默认采用极速模式渲染页面 目前只有360浏览器支持此 <meta> 标签--> 
+  <meta name="renderer" content="webkit" /> 
+  <!--让 IE 浏览器运行最新的渲染模式下--> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+  <!--设置viewport的宽度、初始化、缩放比例--> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" /> 
+  <!-- Fonts --> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/boostrap-font.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/boostrap-font-one.css" /> 
+  <!-- CSS Libs --> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/font-awesome.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/animate.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap-switch.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/checkbox3.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/jquery.dataTables.min.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/dataTables.bootstrap.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/bootstrap/css/select2.min.css" /> 
+  <!-- CSS App --> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/lib/css/style.css" /> 
+  <link type="text/css" rel="stylesheet" href="../../plugins/lib/css/themes/flat-blue.css" /> 
+  <link type="text/css" rel="stylesheet" href="./css/orderAdd.css" /> 
+ </head> 
+ <body class="back-color">
+  <!--class="flat-blue"  --> 
+  <!-- Main Content --> 
+  <div class="container-fluid back-color" id="context"> 
+   <div class="row"> 
+    <!-- 表单start --> 
+    <div class="col-xs-12 back-color"> 
+     <div class="card back-color"> 
+      <div class="card-header"> 
+       <form id="orderaddForm"> 
+        <!-- 记录选择框的id --> 
+        <input type="hidden" id="foodIds" name="foodIds" value="" /> 
+        <table class="table back-color"> 
+         <tbody>
+          <tr> 
+           <td> <label class="col-xs-2 white-color" > <h3>座位号:</h3> </label> 
+            <div class="col-xs-3" style="padding-top: 15px;"> 
+             <!-- <input type="text" class="form-control" id="tableNumber" name="tableNumber" placeholder="餐桌牌号"> --> 
+             <select class="form-control" name="tableNumber" id="tableNumber"> 
+             	 <option value="1">1号</option>
+             	 <option value="2">2号</option> 
+             	 <option value="3">3号</option> 
+             	 <option value="4">4号</option> 
+             	 <option value="5">5号</option> 
+             	 <option value="6">6号</option> 
+             	 <option value="7">7号</option> 
+             	 <option value="8">8号</option> 
+             	 <option value="9">9号</option> 
+             	 <option value="10">10号</option> 
+             	 <option value="11">11号</option> 
+             	 <option value="12">12号</option> 
+             	 <option value="13">13号</option> 
+             	 <option value="14">14号</option> 
+             	 <option value="15">15号</option> 
+             </select> 
+            </div> <label class="col-xs-2 white-color"> <h3>总消费（￥）:</h3> </label> 
+            <div class="col-xs-3" style="padding-top: 15px;"> 
+             <input type="text" class="form-control" id="totalPrice" name="totalPrice" placeholder="订餐总额" readonly="readonly" value="0"/>
+            </div> </td> 
+          </tr> 
+         </tbody>
+        </table> 
+       </form> 
+      </div> 
+     </div> 
+    </div> 
+    <!-- 表单end--> 
+    <!-- 菜单类型开始 --> 
+    <form class="form-inline " role="form" id="orderFormId">
+    <!--  <div class="row">
+         <div class="form-group col-xs-3 text-center">
+             <input type="text" id="f1" class="form-control" placeholder="请输入账号"/>
+         </div>
+         <div class="form-group col-xs-3 text-center">
+             <input type="password" id="f2" class="form-control" placeholder="请输入密码"/>
+         </div>
+         <div class="form-group col-xs-3 text-center">
+             <label for="f3" class="sr-only">邮箱</label>
+             <input type="email" class="form-control" id="f3" placeholder="请输入邮箱"/>
+         </div>
+         <div class="form-group col-xs-3 text-center">
+
+         </div>
+
+
+     </div> -->
+    
+     <div class="row">
+         <div class="form-group col-xs-3 ">
+             <button class="btn btn-block btn-primary" onclick="addElement(td1)"><i class=" glyphicon  glyphicon-plus"></i> </button>
+         </div>
+         <div class="form-group col-xs-3 ">
+             <button class="btn btn-block btn-primary" onclick="addElement(td2)"><i class=" glyphicon  glyphicon-plus"></i></button>
+         </div>
+         <div class="form-group col-xs-3 ">
+             <button class="btn btn-block btn-primary" onclick="addElement(td3)"><i class="glyphicon  glyphicon-plus"></i></button>
+         </div>
+
+     </div>
+
+
+
+ </form>
+    <!-- 菜单类型框end --> 
+   </div> 
+   
+  </div> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/jquery.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/getrequest.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/page-1.0.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/cookie.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/bootstrap-growl.min.js"></script> 
+  <script type="text/javascript" src="../../common/js/utils.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/Chart.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/bootstrap-switch.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/jquery.matchHeight-min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/jquery.dataTables.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/dataTables.bootstrap.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/bootstrap/js/select2.full.min.js"></script> 
+  <script type="text/javascript" src="../../plugins/lib/js/app.js"></script> 
+  <script>
+  		/**在页面添加菜品元素 **/
+      function addElement(colNum){
+    	  
+      }
+      
+      /**获取菜品元素 **/
+      function getOrderElement(lable){
+    	  $orderElement='<label class="control-label col-sm-8 text-center">'+lable+'</label>';
+    	  $orderElement+='<div class="input-group col-sm-4">';
+    	  $orderElement+='<span class="input-group-addon" onclick="mins(this);" style="cursor:default;">-</span>';
+    	  $orderElement+='<input class="form-control" type="text" class="" value="0" id="1" onmouseover="MouseOver(this);" onmouseout="numListner(this);" >';
+    	  $orderElement+='<span class="input-group-addon" onclick="plus(this);" style="cursor:default;">+</span>';
+    	  $orderElement+='</div>';
+    	  
+    	  return $($orderElement);
+      }
+      /**获取每行元素 **/
+      function getrowElement(){
+    	  $rowElement=$('<div class="row">');
+    	  $colElement1=$('<div class="form-group col-xs-3 text-center td1">');
+    	  $colElement2=$('<div class="form-group col-xs-3 text-center td2">');
+    	  $colElement3=$('<div class="form-group col-xs-3 text-center td3">');
+    	  $rowElement.append( $colElement1).append( $colElement2).append( $colElement3);
+    	  return $rowElement;
+      }
+      </script> 
+ </body>
+</html>
